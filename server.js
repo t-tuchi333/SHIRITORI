@@ -20,6 +20,7 @@ Deno.serve(async (request) => {
         return new Response(wordHistories.slice(-1)[0]);
     }
 
+    
     // POST /shiritori or /atamatori: 次の単語を入力する
     if (request.method === "POST" && pathname === "/shiritori" || pathname === "/atamatori") {
         const requestJson = await request.json();
