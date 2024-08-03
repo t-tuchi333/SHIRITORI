@@ -15,4 +15,10 @@
 　・　ひらがな以外は入力できないようにする<br>
 　・ 「あたまとり」モードの切り替え機能<br>
 <br>
-https://t-tuchi333-shiritori-44.deno.dev/
+作成したwebサイトのURL：<br>
+https://t-tuchi333-shiritori-44.deno.dev/<br>
+<br>
+必要なセットアップ等はありません<br>
+<br>
+参考のために以下のURLを参考にしました。<br>
+[1] ひらがな判定: https://javascript.programmer-reference.com/js-check-hiragana/<br>

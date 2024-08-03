@@ -151,6 +151,7 @@ Deno.serve(async (request) => {
     )
 });
 
+//[1]
 // strがひらがな以外を含むか判定
 function isHiragana(str){
     str = (str==null)?"":str;
