@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<!-- headタグの中にはメタデータ等を記載する -->
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<!-- bodyタグの中には実際に表示するものなどを書く -->
+<body>
+    <div class="text-center">
+        <p id="midashiWord", style="font-size: 50px;"></p>
+        <p id="previousWord"></p>
+
+        <input id="nextWordInput" type="text" />
+        <button id="nextWordSendButton">送信</button>
+        <button id="resetBtn">リセット</button>
+    
+    </div>
+    
+    <div class="text-center2">
+        <button id="changeModeButton">モード切替</button>
+    </div>
+    
+    <script>
+        let mode = "/shiritori";
+
+        async function reset(evnet) {
+            
+            const response = await fetch(mode, { method: "GET" });
+            const previousWord = await response.text();
+            
+            const paragraph = document.querySelector("#previousWord");
+            const paragraph2 = document.querySelector("#midashiWord");
+
+            paragraph.innerHTML = `前の単語: ${previousWord}`;
+            paragraph2.innerHTML = `${previousWord}`;
+
+            document.querySelector("#nextWordInput").value = "";
+        }
+        
+        window.onload = async (event) => {
+           await reset(event);
+        }
+
+        // 送信ボタンの押下時に実行
+        document.querySelector("#nextWordSendButton").onclick = async(event) => {
+            const nextWordInput = document.querySelector("#nextWordInput");
+            const nextWordInputText = nextWordInput.value;
+            
+            // POST /shiritori or /atamatoriを実行
+            // 次の単語をresponseに格納
+            const response = await fetch(
+                mode,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ nextWord: nextWordInputText })
+                }
+            );
+
+            // status: 200以外が返ってきた場合にエラーを表示
+            if (response.status !== 200) {
+                const errorJson = await response.text();
+                const errorObj = JSON.parse(errorJson);
+
+                if(response.status === 400) alert(errorObj["errorMessage"]);
+                if(response.status === 401) {
+                    alert(errorObj["errorMessage"]);
+                    await reset();
+                }
+                if(response.status === 402) {
+                    alert(errorObj["errorMessage"]);
+                    await reset();
+                }
+                if(response.status === 403) {
+                    alert(errorObj["errorMessage"]);
+                }
+            }
+            
+            const previousWord = await response.text();
+            
+            // id: previousWordのタグを取得
+            const paragraph = document.querySelector("#previousWord");
+            // 取得したタグの中身を書き換える
+            paragraph.innerHTML = `前の単語: ${previousWord}`;
+            // inputタグの中身を消去する
+            nextWordInput.value = "";
+        }
+
+        // リセットボタンが押されたとき実行
+        document.querySelector("#resetBtn").onclick = async(event) => {
+            const response = await fetch(
+                "/reset",
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: "",
+                }
+            );
+            await reset();
+        }
+
+        // モード切替ボタンがおされたとき実行
+        document.querySelector("#changeModeButton").onclick = async(event) => {
+            if(mode === "/shiritori") mode = "/atamatori";
+            else if(mode === "/atamatori") mode = "/shiritori";
+
+            await reset();
+        }
+    </script>   
+</body>
+
+</html>

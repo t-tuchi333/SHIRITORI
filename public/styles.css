@@ -1,0 +1,17 @@
+/* public/styles.css */
+body {
+    background: skyblue;
+}
+
+div{
+    margin: 20px;
+    padding: 20px;
+}
+
+.text-center{
+    text-align: center;
+}
+
+.text-center2{
+    text-align: center;
+}
